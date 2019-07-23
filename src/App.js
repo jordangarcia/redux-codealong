@@ -1,40 +1,31 @@
 import React, { useState, useEffect } from "react";
 import "./App.css";
-
+import { connect } from "./connect";
 import store from "./store";
 window.store = store;
 
-class RightComp3 extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      value: store.getState().search
-    };
-  }
 
-  componentDidMount() {
-    store.subscribe(() => {
-      this.setState({
-        value: store.getState().search
-      })
-    })
-  }
+function RightComp3(props) {
+  return (
+    <div className="comp" style={{ background: "yellow" }}>
+      <h3>RightComp3</h3>
+      The value is "{props.value}"
+    </div>
+  );
+}
 
-  render() {
-    return (
-      <div className="comp" style={{ background: "yellow" }}>
-        <h3>RightComp3</h3>
-        The value is "{this.state.value}"
-      </div>
-    );
+const mapStateToProps = (state) => {
+  return {
+    value: state.search
   }
 }
+const ConnectedRightComp3 = connect(mapStateToProps)(RightComp3)
 
 function RightComp2({ searchValue }) {
   return (
     <div className="comp" style={{ background: "green" }}>
       <h3>RightComp2</h3>
-      <RightComp3 />
+      <ConnectedRightComp3 />
     </div>
   );
 }
