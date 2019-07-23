@@ -16,13 +16,14 @@ import store from "./store";
 
 // (dispatch) => props
 
-export function connect(mapStateToProps, dispatchToProps) {
+export function connect(mapStateToProps, mapDispatchToProps = () => {}) {
   return function(Comp) {
     return class ConnectedComponent extends React.Component {
       constructor(props) {
         super(props);
         this.state = {
-          props: mapStateToProps(store.getState())
+          props: mapStateToProps(store.getState()),
+          dispatchProps: mapDispatchToProps(store.dispatch)
         };
       }
 
@@ -39,7 +40,11 @@ export function connect(mapStateToProps, dispatchToProps) {
       }
 
       render() {
-        return <Comp {...this.state.props} />;
+        const combinedProps = {
+          ...this.state.props,
+          ...this.state.dispatchProps,
+        }
+        return <Comp {...combinedProps} />;
       }
     }
   };

@@ -4,7 +4,6 @@ import { connect } from "./connect";
 import store from "./store";
 window.store = store;
 
-
 function RightComp3(props) {
   return (
     <div className="comp" style={{ background: "yellow" }}>
@@ -14,12 +13,12 @@ function RightComp3(props) {
   );
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {
     value: state.search
-  }
-}
-const ConnectedRightComp3 = connect(mapStateToProps)(RightComp3)
+  };
+};
+const ConnectedRightComp3 = connect(mapStateToProps)(RightComp3);
 
 function RightComp2({ searchValue }) {
   return (
@@ -43,43 +42,48 @@ function LeftComp1(props) {
   return (
     <div className="comp" style={{ background: "red" }}>
       <h3>LeftComp1</h3>
-      <LeftComp2 />
+      <ConnectedLeftComp2 />
     </div>
   );
 }
 
-class LeftComp2 extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      search: ""
-    };
-  }
+function LeftComp2({ search, setSearch }) {
+  return (
+    <div className="comp" style={{ background: "orange" }}>
+      <h3>LeftComp2</h3>
+      <input
+        type="text"
+        placeholder="search box"
+        value={search}
+        onChange={e => setSearch(e.target.value)}
+      />
+    </div>
+  );
+}
 
-  componentDidMount() {
-    store.subscribe(() => {
-      this.setState({
-        search: store.getState().search
-      });
-    });
-  }
-
-  render() {
-    return (
-      <div className="comp" style={{ background: "orange" }}>
-        <h3>LeftComp2</h3>
-        <input
-          type="text"
-          placeholder="search box"
-          value={this.state.search}
-          onChange={e =>
-            store.dispatch({ type: "SET_SEARCH", search: e.target.value })
-          }
-        />
-      </div>
-    );
+const mapStateToProps2 = (state) => {
+  return {
+    search: state.search
   }
 }
+
+const mapDispatchToProps2 = (dispatch) => {
+  return {
+    setSearch: (searchValue) => {
+      dispatch({
+        type: 'SET_SEARCH',
+        search: searchValue,
+      })
+    }
+  }
+}
+
+const ConnectedLeftComp2 = connect(
+  mapStateToProps2,
+  mapDispatchToProps2
+)(LeftComp2)
+
+
 
 // function LeftComp2(props) {
 //   const [search, setSearch] = useState(store.getState().search)
